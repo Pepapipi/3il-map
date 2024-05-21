@@ -51,7 +51,8 @@ const FormPage = () => {
   };
 
   const handleSubmit = (e) => {  
-    Axios.post("http://localhost:3001/pings/create", formData, {
+    var url = id ? `http://localhost:3001/pings/update/${id}` : "http://localhost:3001/pings/create";
+    Axios.post(url, formData, {
       headers: {
         'Content-Type': 'application/json'
       }

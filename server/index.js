@@ -151,6 +151,69 @@ app.post('/pings/create', (req, res) => {
     });
 });
 
+app.post('/pings/update/:id', (req, res) => {
+    const pingId = req.params.id;
+    const { alias, position_x, position_y, nom, description, is_accessible, indice_cout_vie, comparaison, distance, passeport, langue, timezone, automne_semestre, lien_ecole } = req.body; 
+    const connection = mysql.createConnection({
+        host: 'localhost',
+        user: 'root',
+        password: '',
+        database: '3il_map_db'
+    });
+
+    
+    connection.connect((err) => {
+        if (err) {
+            console.error('Erreur de connexion à la base de données :', err);
+            res.status(500).json({ error: 'Erreur de connexion à la base de données' });
+            return;
+        }
+
+        const position = `POINT(${position_x} ${position_y})`;
+
+        const query = `
+            UPDATE pings SET
+            alias = ?,
+            position = ST_GeomFromText(?),
+            nom = ?,
+            description = ?,
+            is_accessible = ?,
+            indice_cout_vie = ?,
+            comparaison = ?,
+            distance = ?,
+            passeport = ?,
+            langue = ?,
+            timezone = ?,
+            automne_semestre = ?,
+            lien_ecole = ?
+            WHERE id = ?
+        `;
+
+        const values = [
+            alias, position, nom, description, is_accessible, indice_cout_vie, comparaison, distance, passeport, langue, timezone, automne_semestre, lien_ecole, pingId
+        ];
+
+        connection.query(query, values, (err, result) => {
+            if (err) {
+                console.error('Erreur lors de l\'exécution de la requête :', err);
+                res.status(504).json({ error: err});
+                return;
+            }
+
+            res.json({ message: 'Ping created successfully' });
+
+            connection.end((err) => {
+                if (err) {
+                    console.error('Erreur lors de la fermeture de la connexion à la base de données :', err);
+                    return;
+                }
+                console.log('Connexion à la base de données fermée');
+            });
+        });
+    });
+});
+
+
 // Add CORS headers
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');

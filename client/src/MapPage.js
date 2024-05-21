@@ -18,7 +18,7 @@ function MapPage() {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         {pings.map((ping, index) => {
-          const position = [ping.position.x, ping.position.y];
+          const position = [ping.position['x'], ping.position['y']];
           return (
             <Marker key={index} position={position}>
               <Popup>
