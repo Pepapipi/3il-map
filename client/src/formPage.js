@@ -64,7 +64,7 @@ const FormPage = () => {
 
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-4">Contact Form</h2>
+      <h2 className="text-2xl font-bold mb-4">Ping Form</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         {['alias', 'position_x','position_y', 'nom', 'description', 'indice_cout_vie', 'comparaison', 'distance', 'langue', 'timezone', 'automne_semestre', 'lien_ecole'].map((field) => (
           <div key={field} className="flex flex-col">
