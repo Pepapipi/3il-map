@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Axios from "axios";
 
 const FormPage = () => {
   const [formData, setFormData] = useState({
@@ -20,17 +21,46 @@ const FormPage = () => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
+    setFormData((prevFormData) => ({
+      ...prevFormData,
       [name]: type === 'checkbox' ? checked : value,
-    });
+    }));
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    // Traite les données du formulaire ici
-    console.log('Form Data:', formData);
+    const data = {
+      alisasapp: 'exampleAlias',
+      position_x: 40.7128,
+      position_y: -74.0060,
+      nom: 'Example Name',
+      description: 'Example Description',
+      is_accessible: true,
+      indice_cout_vie: 5,
+      comparaison: 'High',
+      distance: 100,
+      passeport: 'Required',
+      langue: 'English',
+      timezone: 'EST',
+      automne_semestre: '2021-2022',
+      lien_ecole: 'http://example.com'
   };
+  
+  Axios.post("http://localhost:3001/pings/create", data, {
+      headers: {
+          'Content-Type': 'application/json'
+      }
+  })
+  .then(response => {
+      console.log(response.data);
+  })
+  .catch(error => {
+      console.error('Error:', error);
+  });
+    e.preventDefault();
+    // Your form submission logic goes here
+  };
+
+
 
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
@@ -50,7 +80,7 @@ const FormPage = () => {
           </div>
         ))}
         <div className="flex items-center">
-          <label htmlFor="is_accessible" className="mr-2">Is Accessible:</label>
+          <label htmlFor="is_accessible" className="mr-2">Est accessible avec un contrat en veille:</label>
           <input
             type="checkbox"
             id="is_accessible"
