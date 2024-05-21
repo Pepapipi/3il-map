@@ -64,6 +64,43 @@ app.get('/pings', (req, res) => {
     });
 });
 
+app.get('/pings/:id', (req, res) => {
+    const pingId = req.params.id;
+
+        const connection = mysql.createConnection({
+            host: 'localhost',
+            user: 'root',
+            password: '',
+            database: '3il_map_db'
+        });
+    
+        console.log('Connexion à la base de données...');
+        connection.connect((err) => {
+            if (err) {
+                console.error('Erreur de connexion à la base de données :', err);
+                res.status(500).json({ error: 'Erreur de connexion à la base de données' });
+                return;
+            }
+            connection.query('SELECT * FROM pings WHERE id = ?', [pingId], (err, rows) => {
+                if (err) {
+                    console.error('Erreur lors de l\'exécution de la requête :', err);
+                    res.status(500).json({ error: 'Erreur lors de l\'exécution de la requête' });
+                    return;
+                }
+    
+                res.json(rows);
+    
+                // Maintenant que toutes les requêtes ont été exécutées, nous pouvons fermer la connexion.
+                connection.end((err) => {
+                    if (err) {
+                        console.error('Erreur lors de la fermeture de la connexion à la base de données :', err);
+                        return;
+                    }
+                    console.log('Connexion à la base de données fermée');
+                });
+            });
+        });
+    });
 
 app.post('/pings/create', (req, res) => {
     const { alisasapp, position_x, position_y, nom, description, is_accessible, indice_cout_vie, comparaison, distance, passeport, langue, timezone, automne_semestre, lien_ecole } = req.body; 

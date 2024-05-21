@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import Axios from "axios";
+import { useParams } from 'react-router-dom';
+import { useEffect } from 'react';
 
 const FormPage = () => {
   const [formData, setFormData] = useState({
@@ -19,6 +21,27 @@ const FormPage = () => {
     lien_ecole: '',
   });
 
+  const { id } = useParams(); 
+  
+  console.log(id); // Assuming you are using React Router to handle the URL parameters
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (id) {
+          const response = await Axios.get(`http://localhost:3001/pings/${id}`);
+          const data = response.data[0];
+          data.position_x = data.position['x'];
+          data.position_y = data.position['y'];
+          setFormData(data);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+
+    fetchData();
+  }, [id]);
+  console.log(formData);
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prevFormData) => ({
@@ -27,40 +50,21 @@ const FormPage = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
-    const data = {
-      alisasapp: 'exampleAlias',
-      position_x: 40.7128,
-      position_y: -74.0060,
-      nom: 'Example Name',
-      description: 'Example Description',
-      is_accessible: true,
-      indice_cout_vie: 5,
-      comparaison: 'High',
-      distance: 100,
-      passeport: 'Required',
-      langue: 'English',
-      timezone: 'EST',
-      automne_semestre: '2021-2022',
-      lien_ecole: 'http://example.com'
-  };
-  
-  Axios.post("http://localhost:3001/pings/create", data, {
+  const handleSubmit = (e) => {  
+    Axios.post("http://localhost:3001/pings/create", formData, {
       headers: {
-          'Content-Type': 'application/json'
+        'Content-Type': 'application/json'
       }
-  })
-  .then(response => {
-      console.log(response.data);
-  })
-  .catch(error => {
-      console.error('Error:', error);
-  });
+    })
+      .then(response => {
+        console.log(response.data);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
     e.preventDefault();
     // Your form submission logic goes here
   };
-
-
 
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">

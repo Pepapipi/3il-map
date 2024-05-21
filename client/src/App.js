@@ -14,6 +14,7 @@ function App() {
         <Routes>
           <Route path="/" element={<MapPage />} />
           <Route path="/form" element={<FormPage />} />
+          <Route path="/form/:id" element={<FormPage />} />
         </Routes>
       </div>
     </Router>
