@@ -161,7 +161,7 @@ app.post('/pings/update/:id', (req, res) => {
         database: '3il_map_db'
     });
 
-    
+
     connection.connect((err) => {
         if (err) {
             console.error('Erreur de connexion à la base de données :', err);
@@ -222,9 +222,10 @@ app.use((req, res, next) => {
     next();
 });
 
-app.put('/pings/:id', (req, res) => {
+
+
+app.delete('/pings/:id', (req, res) => {
     const pingId = req.params.id;
-    const { status } = req.body;
 
     const connection = mysql.createConnection({
         host: 'localhost',
@@ -233,7 +234,6 @@ app.put('/pings/:id', (req, res) => {
         database: '3il_map_db'
     });
 
-    console.log('Connexion à la base de données...');
     connection.connect((err) => {
         if (err) {
             console.error('Erreur de connexion à la base de données :', err);
@@ -241,14 +241,14 @@ app.put('/pings/:id', (req, res) => {
             return;
         }
 
-        connection.query('UPDATE pings SET status = ? WHERE id = ?', [status, pingId], (err, result) => {
+        connection.query('DELETE FROM pings WHERE id = ?', [pingId], (err, result) => {
             if (err) {
                 console.error('Erreur lors de l\'exécution de la requête :', err);
                 res.status(500).json({ error: 'Erreur lors de l\'exécution de la requête' });
                 return;
             }
 
-            res.json({ message: 'Ping updated successfully' });
+            res.json({ message: 'Ping deleted successfully' });
 
             // Maintenant que toutes les requêtes ont été exécutées, nous pouvons fermer la connexion.
             connection.end((err) => {
