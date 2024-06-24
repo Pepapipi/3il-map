@@ -32,7 +32,7 @@ app.get('/pings', (req, res) => {
     const connection = mysql.createConnection({
         host: 'localhost',
         user: 'root',
-        password: '',
+        password: 'root',
         database: '3il_map_db'
     });
 
