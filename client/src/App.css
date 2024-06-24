@@ -1,4 +1,20 @@
+/* src/index.css */
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue:wght@300;400;700&family=Roboto+Condensed:wght@300;400;700&family=Ruda:wght@300;400;700&display=swap');
+
+/* Ajoutez d'autres styles globaux ici si nécessaire */
+body {
+  font-family: 'Roboto Condensed', sans-serif; /* Définit la police par défaut pour le corps */
+}
+
 .leaflet-container{
   width: 100vw;
   height: 100vh;
+}
+
+.couleur-bleu {
+  background-color: rgb(1, 78, 103);
+}
+
+.couleur-orange {
+  color: rgb(232, 77, 13) !important;
 }
