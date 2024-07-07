@@ -7,8 +7,8 @@ const Entete = () => {
         <nav className="navbar navbar-expand-lg couleur-bleu fixed-top">
             <div className="container-fluid">
                 <img src="img/logo.png" alt="Logo" width="30" height="24" className="d-inline-block align-text-top" />
-                <a className="navbar-brand couleur-orange" href="#">3iL Mobilité</a>
-                <button className="btn btn-success">Se connecter</button>
+                <div className="navbar-brand couleur-orange">3iL Mobilité</div> 
+                <a  href={'/form/'}><button className="btn btn-success">Ajouter une école</button></a>
             </div>
         </nav>
     );

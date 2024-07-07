@@ -1,8 +1,9 @@
 const express = require('express');
 const cors = require('cors');
+const bcrypt = require('bcrypt');
 
 const mysql = require('mysql');
-const e = require('express');
+const session = require('express-session');
 
 const app = express();
 const port = 3001;
@@ -16,6 +17,7 @@ const corsOptions = {
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Headers'],
 };
+
 
 app.options('*', cors(corsOptions)); 
 
@@ -32,7 +34,7 @@ app.get('/pings', (req, res) => {
     const connection = mysql.createConnection({
         host: 'localhost',
         user: 'root',
-        password: 'root',
+        password: '',
         database: '3il_map_db'
     });
 
@@ -102,8 +104,10 @@ app.get('/pings/:id', (req, res) => {
         });
     });
 
+
+
 app.post('/pings/create', (req, res) => {
-    const { alisasapp, position_x, position_y, nom, description, is_accessible, indice_cout_vie, comparaison, distance, passeport, langue, timezone, automne_semestre, lien_ecole } = req.body; 
+    const { alisasapp, position_x, position_y, nom, description, is_accessible, indice_cout_vie, comparaison, distance, passeport, langue, timezone, automne_semestre, lien_ecole, erasmus } = req.body; 
     const connection = mysql.createConnection({
         host: 'localhost',
         user: 'root',
@@ -123,12 +127,12 @@ app.post('/pings/create', (req, res) => {
 
         const query = `
             INSERT INTO pings (
-                alias, position, nom, description, is_accessible, indice_cout_vie, comparaison, distance, passeport, langue, timezone, automne_semestre, lien_ecole
-            ) VALUES (?, ST_GeomFromText(?), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                alias, position, nom, description, is_accessible, indice_cout_vie, comparaison, distance, passeport, langue, timezone, automne_semestre, lien_ecole, erasmus
+            ) VALUES (?, ST_GeomFromText(?), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
 
         const values = [
-            alisasapp, position, nom, description, is_accessible, indice_cout_vie, comparaison, distance, passeport, langue, timezone, automne_semestre, lien_ecole
+            alisasapp, position, nom, description, is_accessible, indice_cout_vie, comparaison, distance, passeport, langue, timezone, automne_semestre, lien_ecole, erasmus
         ];
 
         connection.query(query, values, (err, result) => {
@@ -153,7 +157,7 @@ app.post('/pings/create', (req, res) => {
 
 app.post('/pings/update/:id', (req, res) => {
     const pingId = req.params.id;
-    const { alias, position_x, position_y, nom, description, is_accessible, indice_cout_vie, comparaison, distance, passeport, langue, timezone, automne_semestre, lien_ecole } = req.body; 
+    const { alias, position_x, position_y, nom, description, is_accessible, indice_cout_vie, comparaison, distance, passeport, langue, timezone, automne_semestre, lien_ecole, erasmus } = req.body; 
     const connection = mysql.createConnection({
         host: 'localhost',
         user: 'root',
@@ -185,17 +189,19 @@ app.post('/pings/update/:id', (req, res) => {
             langue = ?,
             timezone = ?,
             automne_semestre = ?,
-            lien_ecole = ?
+            lien_ecole = ?,
+            erasmus = ?
             WHERE id = ?
         `;
 
         const values = [
-            alias, position, nom, description, is_accessible, indice_cout_vie, comparaison, distance, passeport, langue, timezone, automne_semestre, lien_ecole, pingId
+            alias, position, nom, description, is_accessible, indice_cout_vie, comparaison, distance, passeport, langue, timezone, automne_semestre, lien_ecole, erasmus, pingId
         ];
 
         connection.query(query, values, (err, result) => {
             if (err) {
                 console.error('Erreur lors de l\'exécution de la requête :', err);
+
                 res.status(504).json({ error: err});
                 return;
             }

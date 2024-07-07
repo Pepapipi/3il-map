@@ -19,6 +19,7 @@ const FormPage = () => {
     timezone: '',
     automne_semestre: '',
     lien_ecole: '',
+    erasmus: false,
   });
 
   const { id } = useParams(); 
@@ -64,6 +65,7 @@ const FormPage = () => {
         console.error('Error:', error);
       });
     e.preventDefault();
+    window.location.href = "/";
     // Your form submission logic goes here
   };
 
@@ -106,7 +108,18 @@ const FormPage = () => {
             className="h-5 w-5"
           />
         </div>
-        <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700">Submit</button>
+        <div className="flex items-center">
+          <label htmlFor="erasmus" className="mr-2">Erasmus :</label>
+          <input
+            type="checkbox"
+            id="erasmus"
+            name="erasmus"
+            checked={formData.erasmus}
+            onChange={handleChange}
+            className="h-5 w-5"
+          />
+        </div>
+        <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700">Envoyer</button>
       </form>
     </div>
   );

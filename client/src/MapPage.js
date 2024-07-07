@@ -1,5 +1,7 @@
 import React from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import L from "leaflet";
+
 import Axios from "axios";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -7,9 +9,24 @@ function MapPage() {
 	const [pings, setPings] = React.useState([]);
 
 	React.useEffect(() => {
-		Axios.get("/pings").then((res) => setPings(res.data));
+		Axios.get("/pings").then((res) => setPings(res.data)).catch((err) => console.error(err));
 	}, []);
 
+	const createIcon = (color) => {
+        const svgString = `
+            <svg height="24px" viewBox="0 0 24 24" width="24px" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="10" fill="${color}"/>
+                <circle cx="12" cy="12" r="6" fill="white"/>
+                <circle cx="12" cy="12" r="4" fill="${color}"/>
+            </svg>
+        `;
+        return L.divIcon({
+            html: svgString,
+            className: '',
+            iconSize: [24, 24],
+            iconAnchor: [12, 12]
+        });
+    };
 
 	return (
 		<MapContainer center={[50, 0]} zoom={4} scrollWheelZoom={false}>
@@ -19,8 +36,10 @@ function MapPage() {
 			/>
 			{pings.map((ping, index) => {
 				const position = [ping.position['x'], ping.position['y']];
+
 				return (
-					<Marker key={index} position={position}>
+					
+					<Marker key={index} position={position} icon={ping.erasmus == '1' ?  createIcon("blue") : createIcon("black")}>
 						<Popup>
 							{/* <div class="card"> */}
 								<img src="..." class="card-img-top" alt="..." />
